@@ -15,11 +15,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 db_connect = create_engine('sqlite:///cc.db')
 
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 @app.route("/", methods=['GET', 'POST'])
 def register():
     if request.method == "POST":
@@ -27,13 +22,8 @@ def register():
         connection = db_connect.connect()
         connection.execute("insert into user_details(first_name,last_name,email, password) values(?,?,?,?)",
                            (payload['first_name'], payload['last_name'], payload['email'], payload['password']))
-        return render_template('login.html')
+        return redirect(url_for("login"))
     return render_template("test.html")
-
-
-@app.route('/welcome/<name>')
-def welcome(name):
-    return render_template('main.html', name=name)
 
 
 @app.route('/login', methods=['GET', "POST"])
@@ -52,7 +42,6 @@ def login():
                 "select first_name, last_name,email from user_details where email = ?", email)
             result = query.cursor.fetchall()
             return redirect(url_for("display", result=result))
-            # return render_template("display.html", result=result)
         else:
             return "Username or password is incorrect"
 
