@@ -1,5 +1,4 @@
 from flask import Flask, redirect, flash, request, make_response, abort, render_template, url_for
-from flask_restful import Resource, Api
 from sqlalchemy import create_engine
 from werkzeug.utils import secure_filename
 import json
@@ -74,4 +73,4 @@ def display_files_info():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
