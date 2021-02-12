@@ -1,6 +1,5 @@
 from flask import Flask, redirect, flash, request, make_response, abort, render_template, url_for
 from sqlalchemy import create_engine
-from werkzeug.utils import secure_filename
 import json
 import os
 
@@ -42,9 +41,29 @@ def login():
             result = query.cursor.fetchall()
             return redirect(url_for("display", result=result))
         else:
-            return "Username or password is incorrect"
-
+            return redirect(url_for("login_failed"))
     return render_template('login.html')
+
+
+@app.route('/login_failed', methods=['GET', "POST"])
+def login_failed():
+    if request.method == 'POST':
+        global result
+        payload = request.form
+        email = payload['email']
+        password = payload['password']
+        connection = db_connect.connect()
+        query = connection.execute(
+            "select * from user_details where email = ?", email)
+        records = query.cursor.fetchall()
+        if records[0][-1] == password:
+            query = connection.execute(
+                "select first_name, last_name,email from user_details where email = ?", email)
+            result = query.cursor.fetchall()
+            return redirect(url_for("display", result=result))
+        else:
+            return redirect(url_for("login_failed"))
+    return render_template('login_failed.html')
 
 
 @app.route("/display", methods=['GET', 'POST'])
