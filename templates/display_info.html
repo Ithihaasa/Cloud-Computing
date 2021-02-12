@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <title>Register</title>
-    <h1><center>User details</center></h1>
+    <h1><center>Word Count of the file.</center></h1>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -14,16 +14,26 @@
         <p>First Name: {{result[0][0]}}</p>
         <p>Last Name: {{result[0][1]}}</p>
         <p>Username: {{result[0][2]}}</p>
+      <div>
+        <b>Content of the file:</b><br/>
+        <table border=2>
+        {% for key in data %}
+        <tr>
+          <td>
+            {{key}}
+          </td>
+          <td>
+            {{data[key]}}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      Total number of words: {{total_words}}
+      </div>
     <div>
-        <br/>
-    <form method = post enctype=multipart/form-data>
-        <label class="form-label" for="customFile">Upload a file to get word count</label>
-        <input name=file type="file" class="form-control" />
-        <br/>
-        <button type="submit" class="btn btn-primary">Upload</button>
-        <a href="{{ url_for('login')}}"><button class="btn btn-primary" onclick=  login()>Logout</button></a>
-    </form>
+
     </div>
+    <a href="{{ url_for('login')}}"><button class="btn btn-primary" onclick=  login()>Logout</button></a>
     </div>
     </div>
 
